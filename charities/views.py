@@ -12,11 +12,28 @@ from charities.serializers import (
 
 
 class BenefactorRegistration(APIView):
-    pass
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request):
+        ser_data = BenefactorSerializer(data=request.POST)
+        if ser_data.is_valid():
+            ser_data.save(user=request.user)
+            return Response(data=ser_data.data, status=status.HTTP_200_OK)
+
+        return Response(data=ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class CharityRegistration(APIView):
-    pass
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        ser_data = CharitySerializer(data=request.POST)
+        if ser_data.is_valid():
+            ser_data.save(user=request.user)
+            return Response(data=ser_data.data, status=status.HTTP_200_OK)
+
+        return Response(data=ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Tasks(generics.ListCreateAPIView):
