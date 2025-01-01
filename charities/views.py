@@ -18,7 +18,7 @@ class BenefactorRegistration(APIView):
         ser_data = BenefactorSerializer(data=request.POST)
         if ser_data.is_valid():
             ser_data.save(user=request.user)
-            return Response(data=ser_data.data, status=status.HTTP_200_OK)
+            return Response(data=ser_data.data, status=status.HTTP_201_CREATED)
 
         return Response(data=ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -31,7 +31,7 @@ class CharityRegistration(APIView):
         ser_data = CharitySerializer(data=request.POST)
         if ser_data.is_valid():
             ser_data.save(user=request.user)
-            return Response(data=ser_data.data, status=status.HTTP_200_OK)
+            return Response(data=ser_data.data, status=status.HTTP_201_CREATED)
 
         return Response(data=ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 

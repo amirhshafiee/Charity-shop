@@ -1,4 +1,3 @@
-from idna import valid_label_length
 from rest_framework import serializers
 
 from .models import Benefactor
