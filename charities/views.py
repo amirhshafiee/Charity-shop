@@ -3,7 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from .models import Benefactor
 from accounts.permissions import IsCharityOwner, IsBenefactor
 from charities.models import Task
 from charities.serializers import (
@@ -76,7 +76,17 @@ class Tasks(generics.ListCreateAPIView):
 
 
 class TaskRequest(APIView):
-    pass
+    http_method_names = ["get"]
+    permission_classes = (IsBenefactor, )
+
+    def get(self, request, task_id):
+        task = get_object_or_404(Task.objects.all(), id=task_id)
+        if task.state != 'P':
+            return Response(data={'detail': 'This task is not pending.'}, status=status.HTTP_404_NOT_FOUND)
+        task.state = 'W'
+        task.assigned_benefactor = Benefactor.objects.get(user=request.user)
+        task.save()
+        return Response(data={'detail': 'Request sent.'}, status=status.HTTP_200_OK)
 
 
 class TaskResponse(APIView):
